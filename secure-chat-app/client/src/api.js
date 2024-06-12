@@ -1,10 +1,60 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'http://localhost:5000/api' });
+// Base URL for the backend server
+const API_URL = 'http://localhost:5000/api';
 
-export const registerUser = (userData) => API.post('/users/register', userData);
-export const loginUser = (userData) => API.post('/users/login', userData);
-export const fetchProfile = () => API.get('/users/profile');
-export const createGroupChat = (groupData) => API.post('/groupchats/create', groupData);
-export const sendMessage = (messageData) => API.post('/groupchats/send', messageData);
-export const fetchGroupChats = () => API.get('/groupchats');
+// Register a new user
+export const registerUser = (userData) => {
+    return axios.post(`${API_URL}/users/register`, userData);
+};
+
+// Log in an existing user
+export const loginUser = (userData) => {
+    return axios.post(`${API_URL}/users/login`, userData);
+};
+
+// Fetch user profile
+export const fetchProfile = () => {
+    return axios.get(`${API_URL}/users/profile`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+};
+
+// Fetch group chats
+export const fetchGroupChats = () => {
+    return axios.get(`${API_URL}/groupchats`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+};
+
+// Create a new group chat
+export const createGroupChat = (groupData) => {
+    return axios.post(`${API_URL}/groupchats/create`, groupData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+};
+
+// Send a message to a group chat
+export const sendMessage = (messageData) => {
+    return axios.post(`${API_URL}/groupchats/send`, messageData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+};
+
+// Upload media
+export const uploadMedia = (formData) => {
+    return axios.post(`${API_URL}/media/upload`, formData, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+};

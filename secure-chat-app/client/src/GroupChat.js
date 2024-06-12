@@ -1,13 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { encryptMessage, decryptMessage } from './utils/encryption';
+import { uploadMedia } from './api';
 
-const GroupChat = ({ groupChats, user, onSendMessage }) => {
+const GroupChat = ({ groupChats, user }) => {
     const [currentGroup, setCurrentGroup] = useState(null);
     const [message, setMessage] = useState('');
+    const [file, setFile] = useState(null);
 
     const handleSendMessage = async () => {
-        if (currentGroup && user) {
-            await onSendMessage({ groupId: currentGroup._id, sender: user._id, content: message });
-            setMessage('');
+        const encryptedMessage = encryptMessage(message);
+        // Logic to send encryptedMessage
+    };
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    };
+
+    const handleFileUpload = async () => {
+        if (file) {
+            const formData = new FormData();
+            formData.append('media', file);
+            formData.append('userId', user.identifier);
+
+            try {
+                await uploadMedia(formData);
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
         }
     };
 
@@ -25,7 +44,7 @@ const GroupChat = ({ groupChats, user, onSendMessage }) => {
                     <div>
                         <div>
                             {currentGroup.messages.map(msg => (
-                                <div key={msg._id}>{msg.content}</div>
+                                <div key={msg._id}>{decryptMessage(msg.content)}</div>
                             ))}
                         </div>
                         <input
@@ -34,6 +53,8 @@ const GroupChat = ({ groupChats, user, onSendMessage }) => {
                             onChange={(e) => setMessage(e.target.value)}
                         />
                         <button onClick={handleSendMessage}>Send</button>
+                        <input type="file" onChange={handleFileChange} />
+                        <button onClick={handleFileUpload}>Upload</button>
                     </div>
                 )}
             </div>
