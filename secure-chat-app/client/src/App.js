@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Updated import
 import { registerUser, loginUser, fetchProfile, fetchGroupChats, createGroupChat, sendMessage } from './api';
-import GroupChat from './GroupChat.js';
+import GroupChat from './GroupChat';
 import GlobalStyle from './styles.js';
 
 const App = () => {
@@ -71,16 +71,10 @@ const App = () => {
     return (
         <Router>
             <GlobalStyle />
-            <Switch>
-                <Route path="/groupchats">
-                    <GroupChat
-                        groupChats={groupChats}
-                        user={user}
-                        onSendMessage={handleSendMessage}
-                    />
-                </Route>
+            <Routes> {/* Updated from Switch to Routes */}
+                <Route path="/groupchats" element={<GroupChat groupChats={groupChats} user={user} onSendMessage={handleSendMessage} />} />
                 {/* Add more routes here */}
-            </Switch>
+            </Routes>
         </Router>
     );
 };
