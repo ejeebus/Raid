@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const helmet = require('helmet'); // Add this line
 const connectDB = require('./config/db');
 
 const app = express();
@@ -13,6 +14,9 @@ app.use(express.json({ extended: false }));
 
 // Enable CORS
 app.use(cors());
+
+// Use Helmet for security headers
+app.use(helmet()); // Add this line
 
 // Define Routes
 app.use('/api/users', require('./routes/userRoutes'));
