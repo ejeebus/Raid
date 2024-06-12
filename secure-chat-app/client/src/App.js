@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Updated import
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { registerUser, loginUser, fetchProfile, fetchGroupChats, createGroupChat, sendMessage } from './api';
 import GroupChat from './GroupChat';
 import GlobalStyle from './styles.js';
@@ -71,7 +71,8 @@ const App = () => {
     return (
         <Router>
             <GlobalStyle />
-            <Routes> {/* Updated from Switch to Routes */}
+            <Routes>
+                <Route path="/" element={<h1>Welcome to Secure Chat App</h1>} />
                 <Route path="/groupchats" element={<GroupChat groupChats={groupChats} user={user} onSendMessage={handleSendMessage} />} />
                 {/* Add more routes here */}
             </Routes>
@@ -80,3 +81,4 @@ const App = () => {
 };
 
 export default App;
+
