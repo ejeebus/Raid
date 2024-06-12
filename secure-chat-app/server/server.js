@@ -1,29 +1,33 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+const path = require('path');
+const cors = require('cors');
 const connectDB = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
-const groupChatRoutes = require('./routes/groupChatRoutes');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
 
+// Connect to the database
 connectDB();
 
-app.use(express.json());
+// Init middleware
+app.use(express.json({ extended: false }));
 
-app.use('/api/users', userRoutes);
-app.use('/api/groupchats', groupChatRoutes);
+// Enable CORS
+app.use(cors());
 
-io.on('connection', (socket) => {
-    console.log('New client connected');
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
+// Define Routes
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/groupchats', require('./routes/groupChatRoutes'));
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static('client/build'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
-
-    // Add more Socket.io events here
-});
+}
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
