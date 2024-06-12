@@ -3,7 +3,7 @@ const { generateIdentifier } = require('../utils/identifier');
 
 exports.registerUser = async (req, res) => {
     try {
-        let identifier = generateIdentifier();
+        let identifier = await generateIdentifier();
         let user = new User({ identifier });
         await user.save();
         res.status(201).json({ identifier: user.identifier });
